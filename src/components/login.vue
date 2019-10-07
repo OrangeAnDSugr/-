@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<script>
+<script scoped>
 import axios from 'axios'
 export default {
   data() {
@@ -67,7 +67,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .login {
   height: 100%;
   background-color: #2d434c;
