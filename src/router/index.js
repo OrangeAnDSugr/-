@@ -5,17 +5,33 @@ import Home from '@/components/home'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/login',
       component: Login
     },
     {
-      path: '/home', component: Home
+      path: '/home',
+      component: Home
     },
     {
-      path: '/', redirect: '/home'
+      path: '/',
+      redirect: '/home'
     }
   ]
 })
+router.beforeEach((to, from, next) => {
+  // console.log(to)
+  if (to.path === '/login') {
+    next()
+  } else {
+    const token = localStorage.getItem('token')
+    if (token) {
+      next()
+    } else {
+      next('/login')
+    }
+  }
+})
+export default router
