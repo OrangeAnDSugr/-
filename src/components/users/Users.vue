@@ -29,14 +29,15 @@ export default {
   methods: {
     getUserList() {
       axios
-        .get('http://localhost:8888/api/private/v1/users', {
+        .get('/users', {
           params: {
             pagenum: 1,
             pagesize: 3
-          },
-          headers: {
-            Authorization: localStorage.getItem('token')
           }
+          // },
+          // headers: {
+          //   Authorization: localStorage.getItem('token')
+          // }
         })
         .then(res => {
           // console.log(res)
@@ -49,6 +50,4 @@ export default {
 </script>
 
 <style scoped>
-.userList {
-}
 </style>
