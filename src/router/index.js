@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import Login from '@/components/login'
 import Home from '@/components/home'
 import Users from '@/components/users/Users'
+import Roles from '@/components/roles/Roles'
+import Rights from '@/components/rights/Rights'
+import Category from '@/components/category/Category'
 
 Vue.use(Router)
 
@@ -15,7 +18,12 @@ const router = new Router({
     {
       path: '/home',
       component: Home,
-      children: [{ path: 'users', component: Users }]
+      children: [
+        { path: 'users', component: Users },
+        { path: 'roles', component: Roles },
+        { path: 'rights', component: Rights },
+        { path: 'category', component: Category }
+      ]
     },
     {
       path: '/',
@@ -34,6 +42,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next('/login')
     }
+  }
+  if (to.path === from.path) {
+    console.log('1')
+    return false
   }
 })
 export default router

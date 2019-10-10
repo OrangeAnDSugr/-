@@ -17,6 +17,21 @@
             </template>
             <el-menu-item index="1-1" @click="goUserList"><i class="el-icon-menu"></i>用户列表</el-menu-item>
           </el-submenu>
+          <el-submenu index="2">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>权限管理</span>
+            </template>
+            <el-menu-item index="2-1" @click="goRolesList"><i class="el-icon-menu"></i>角色列表</el-menu-item>
+            <el-menu-item index="2-2" @click="goRightsList"><i class="el-icon-menu"></i>权限列表</el-menu-item>
+          </el-submenu>
+          <el-submenu index="3">
+            <template slot="title">
+              <i class="el-icon-location"></i>
+              <span>商品管理</span>
+            </template>
+            <el-menu-item index="2-3" @click="goCategoryList"><i class="el-icon-menu"></i>商品分类</el-menu-item>
+          </el-submenu>
         </el-menu>
       </el-aside>
       <el-main>
@@ -37,6 +52,15 @@ export default {
     },
     goUserList() {
       this.$router.push('/home/users')
+    },
+    goRolesList() {
+      this.$router.push('/home/roles')
+    },
+    goRightsList() {
+      this.$router.push('/home/rights')
+    },
+    goCategoryList() {
+      this.$router.push('/home/category')
     },
     logout() {
       localStorage.removeItem('token')
@@ -70,10 +94,10 @@ export default {
 .el-main {
   background-color: #e9eef3;
   color: #333;
+  overflow: auto;
 }
 
 .el-container {
-  margin-bottom: 40px;
   height: 100%;
 }
 

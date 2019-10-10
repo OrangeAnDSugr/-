@@ -2,10 +2,9 @@
   <div>
     <!-- 面包屑导航 -->
     <el-breadcrumb separator="/" class="userNav">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-      <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-      <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+      <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!-- 搜索框 -->
     <el-row :gutter="20">
@@ -34,10 +33,9 @@
       </el-table-column>
       <el-table-column prop="address" label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" plain size="mini"
-          @click="showUpdateUserDialog(scope.row)"></el-button>
+          <el-button type="primary" icon="el-icon-edit" plain size="mini" @click="showUpdateUserDialog(scope.row)"></el-button>
           <el-button type="danger" icon="el-icon-delete" plain size="mini" @click="delUser(scope.row.id)"></el-button>
-          <el-button type="success" plain size="mini" icon="el-icon-check">分配角色</el-button>
+          <el-button type="success" plain size="mini" icon="el-icon-check" @click="showAllotRolesDialog(scope.row)">分配角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -84,6 +82,23 @@
         <el-button type="primary" @click.prevent="updateUser">确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 分配角色对话框 -->
+    <el-dialog title="分配角色" :visible.sync="allotRolesDialogVisible">
+      <el-form :model="allotForm">
+        <el-form-item label="用户名" :label-width="formLabelWidth">
+          <el-input v-model="allotForm.username" autocomplete="off" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="角色列表" :label-width="formLabelWidth">
+          <el-select v-model="allotForm.rid" placeholder="请选择角色">
+            <el-option v-for="item in rolesNameArr" :label="item.roleName" :value="item.id" :key="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="allotRolesDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateUserRole">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -95,6 +110,10 @@ export default {
   },
   data() {
     return {
+      // formInline: {
+      //   user: '',
+      //   role_name: ''
+      // },
       userList: [],
       total: -1,
       pageSize: 3,
@@ -127,7 +146,15 @@ export default {
         username: '',
         mobile: '',
         email: ''
-      }
+      },
+      allotRolesDialogVisible: false,
+      allotForm: {
+        rid: -1,
+        id: -1,
+        username: '',
+        role_name: ''
+      },
+      rolesNameArr: []
     }
   },
   methods: {
@@ -242,26 +269,59 @@ export default {
     showUpdateUserDialog(data) {
       this.updateFormVisible = true
       // console.log(data)
-      for(const key in data ) {
+      for (const key in data) {
         this.updateUserForm[key] = data[key]
       }
     },
     // 更新用户信息
     async updateUser() {
       const { id, email, mobile } = this.updateUserForm
-      const res = await this.$http.put(`/users/${id}`,{
+      const res = await this.$http.put(`/users/${id}`, {
         email,
         mobile
       })
       console.log(res)
       const { data, meta } = res.data
-      if( meta.status === 200 ){
+      if (meta.status === 200) {
         const editUser = this.userList.find(item => item.id === id)
         editUser.email = data.email
         editUser.mobile = data.mobile
         this.updateFormVisible = false
       }
-      
+    },
+    // 展示分配角色模态框
+    async showAllotRolesDialog(curRole) {
+      this.allotRolesDialogVisible = true
+
+      this.allotForm.id = curRole.id
+      this.allotForm.username = curRole.username
+      this.allotForm.role_name = curRole.role_name
+      const res = await this.$http.get(`/roles`)
+      const { data } = res.data
+      this.rolesNameArr = data
+      const res2 = await this.$http.get(`/users/${curRole.id}`)
+      console.log(res2)
+
+      if (res2.data.meta.status === 200) {
+        this.allotForm.rid = res2.data.data.rid
+      }
+    },
+    async updateUserRole() {
+      const { id, rid } = this.allotForm
+      if (rid === -1) {
+        this.$message({
+          type: 'warning',
+          message: '请选择角色'
+        })
+        return
+      }
+      const res = await this.$http.put(`/users/${id}/role`, {
+        rid
+      })
+      const { meta } = res.data
+      if (meta.status === 200) {
+        this.allotRolesDialogVisible = false
+      }
     }
   }
 }
@@ -270,7 +330,7 @@ export default {
 <style scoped>
 .userNav {
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 15px;
   background-color: #d4dae0;
 }
 </style>
