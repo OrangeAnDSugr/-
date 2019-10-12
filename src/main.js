@@ -7,6 +7,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import '@/assets/index.css'
 import axios from 'axios'
+import './filter'
 
 Vue.use(ElementUI)
 // 将axios添加到Vue的原型中,避免多次引入axios插件

@@ -30,7 +30,8 @@
               <i class="el-icon-location"></i>
               <span>商品管理</span>
             </template>
-            <el-menu-item index="2-3" @click="goCategoryList"><i class="el-icon-menu"></i>商品分类</el-menu-item>
+            <el-menu-item index="3-1" @click="goGoodsList"><i class="el-icon-menu"></i>商品列表</el-menu-item>
+            <el-menu-item index="3-2" @click="goCategoryList"><i class="el-icon-menu"></i>商品分类</el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
@@ -61,6 +62,9 @@ export default {
     },
     goCategoryList() {
       this.$router.push('/home/category')
+    },
+    goGoodsList() {
+      this.$router.push('/home/goods')
     },
     logout() {
       localStorage.removeItem('token')
