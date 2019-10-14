@@ -10,13 +10,14 @@ export default {
   },
   created() {
     // console.log(this.$route.params)
-    const page = this.$route.params.page
+    const page = parseInt(this.$route.params.page)
+    this.curPage = page
     this.getGoodsList(page)
   },
   watch: {
     $route(to) {
-      console.log(to.params.page)
       const page = to.params.page
+      console.log(page)
       this.getGoodsList(page)
     }
   },
@@ -29,7 +30,7 @@ export default {
           pagesize: this.pagesize
         }
       })
-      // console.log(res)
+      console.log(res)
       const { meta, data } = res.data
       if (meta.status === 200) {
         this.total = data.total

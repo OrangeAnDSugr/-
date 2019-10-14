@@ -1,10 +1,15 @@
 <template>
   <div>
-    <el-breadcrumb separator="/">
+    <el-breadcrumb separator="/" class="goodNav">
       <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item>商品管理</el-breadcrumb-item>
       <el-breadcrumb-item>商品列表</el-breadcrumb-item>
     </el-breadcrumb>
+    <el-row>
+      <el-button type="success" plain>
+        <router-link to="/home/goodsAdd" class="goodAddColor">添加商品</router-link>
+      </el-button>
+    </el-row>
     <el-table :data="goodsList" stripe style="width: 100%">
       <el-table-column type="index" width="50" label="顺序" :v-loading="loading">
       </el-table-column>
@@ -27,7 +32,7 @@
       </el-table-column>
     </el-table>
     <!-- 分页模块 -->
-    <el-pagination background layout="prev, pager, next" :total="total" :page-size="pagesize" @current-change="changePage">
+    <el-pagination background layout="prev, pager, next" :total="total" :page-size="pagesize" @current-change="changePage" :current-page="curPage">
     </el-pagination>
   </div>
 </template>
@@ -35,5 +40,18 @@
 <script src="./script.js">
 </script>
 
-<style>
+<style lang="less">
+.goodNav {
+  margin-bottom: 10px;
+  padding: 15px;
+  background-color: #d4dae0;
+}
+.goodAddColor {
+  color: lime;
+  text-decoration: none;
+  &:hover {
+    color: #fff;
+    text-decoration: none;
+  }
+}
 </style>
